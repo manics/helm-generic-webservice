@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  generic-webservice:
+  - apiVersion: v2
+    created: "2024-11-18T23:14:03.799585371Z"
+    description: A generic webservice
+    digest: 6653e135fc16e4f530c0010cb7dc85fed8f2be33754689a392d0ed26a5220636
+    name: generic-webservice
+    type: application
+    urls:
+    - generic-webservice-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-11-18T23:14:03.799113219Z"
