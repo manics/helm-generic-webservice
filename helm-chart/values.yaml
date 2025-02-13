@@ -11,6 +11,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+command: null
+args: null
+
 # List of Dicts of key value environment variables
 env: []
 envFrom: []
