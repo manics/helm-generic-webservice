@@ -60,7 +60,8 @@ jobs:
       - name: Update Chart.yaml version with tag
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          yq eval ".version |= \"${{ github.ref_name }}"" helm-chart/Chart.yaml
+          yq eval --inplace ".version |= \"${{ github.ref_name }}\"" helm-chart/Chart.yaml
+          git diff
 
       - name: Build chart
         run: |
