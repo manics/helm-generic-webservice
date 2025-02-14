@@ -2,5 +2,7 @@ apiVersion: v2
 name: generic-webservice
 description: A generic webservice
 type: application
-version: 0.1.1
+# Don't change version, it's automatically set by a GitHub workflow
+# when the repository is tagged
+version: 0.0.0
 # appVersion:

@@ -11,8 +11,9 @@ spec:
       {{- include "generic-webservice.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -60,9 +61,17 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
+          {{- if or .Values.volumeMounts .Values.extraFiles }}
           volumeMounts:
+            {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            {{- range $file_key, $file_details := .Values.extraFiles }}
+              - mountPath: {{ $file_details.mountPath }}
+                subPath: {{ $file_key | quote }}
+                name: files
+            {{- end }}
           {{- end }}
       {{- with .Values.volumes }}
       volumes:
@@ -79,4 +88,10 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.extraFiles }}
+      volumes:
+        - name: files
+          configMap:
+            name: {{ include "generic-webservice.fullname" $ }}
       {{- end }}

@@ -10,10 +10,8 @@ env:
 
 jobs:
 
-  helmchart:
-    permissions:
-      contents: write
-    runs-on: ubuntu-22.04
+  lint:
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,6 +23,44 @@ jobs:
         run: |
           helm lint helm-chart/
           helm template helm-chart/ | kubeconform -strict -verbose -kubernetes-version "$VALIDATE_KUBERNETES_VERSION"
+
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install K3s
+        uses: jupyterhub/action-k3s-helm@v4
+        with:
+          k3s-channel: v1.32
+
+      - name: Install chart
+        run: |
+          helm upgrade --install test ./helm-chart -f tests/test-config.yaml --set-file "extraFiles.key1.text=tests/file.txt" --wait
+
+      - name: Test chart
+        run: |
+          helm test test
+          curl -v http://localhost/srv/file.txt > file.txt
+          diff --report-identical-files tests/file.txt file.txt
+
+  publish:
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    needs:
+      - lint
+      - test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update Chart.yaml version with tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          yq eval ".version |= \"${{ github.ref_name }}"" helm-chart/Chart.yaml
 
       - name: Build chart
         run: |

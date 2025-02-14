@@ -35,6 +35,13 @@ podSecurityContext: {}
 
 securityContext: {}
 
+extraFiles: {}
+  # key1:
+  #   mountPath: /path/to/file.txt
+  #   text: |
+  #     abcde
+  #     12345
+
 service:
   type: ClusterIP
   port: 80

@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "generic-webservice.fullname" . }}
+  labels:
+    {{- include "generic-webservice.labels" . | nindent 4 }}
+data:
+  {{- with include "extraFiles.text" .Values.extraFiles }}
+  {{- . | nindent 2 }}
+  {{- end }}

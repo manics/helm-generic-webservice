@@ -1,0 +1,31 @@
+image:
+  repository: docker.io/library/python
+  tag: 3.13-slim
+
+command:
+  - python
+args:
+  - -mhttp.server
+  - "12345"
+
+env:
+  - name: HELLO
+    value: world
+
+extraFiles:
+  key1:
+    mountPath: /srv/file.txt
+    text: this will be replaced by `--set-file "extraFiles.key1.text=tests/file.txt"`
+
+service:
+  type: ClusterIP
+  port: 12345
+
+ingress:
+  enabled: true
+  # className: ""
+  hosts:
+    - host: localhost
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
