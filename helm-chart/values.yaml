@@ -72,6 +72,19 @@ readinessProbe:
     path: /
     port: http
 
+# If pvc.create is true a PVC will be created and mounted,
+# otherwise this section is ignored
+pvc:
+  create: false
+  storageClassName:
+  accessMode: ReadWriteOnce
+  # Optionally override the name of the PVC
+  name: ""
+  # Size of the volume
+  storage: 1Gi
+  # Where to mount the PVC in the pod
+  mountPath: /data
+
 # Additional volumes on the deployment
 volumes: []
 

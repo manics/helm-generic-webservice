@@ -61,22 +61,21 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if or .Values.volumeMounts .Values.extraFiles }}
+          {{- if or .Values.volumeMounts .Values.pvc.create .Values.extraFiles }}
           volumeMounts:
             {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          volumeMounts:
+            {{- if .Values.pvc.create }}
+            - mountPath: {{ .Values.pvc.mountPath }}
+              name: {{ include "generic-webservice.pvcName" $ }}
+            {{- end }}
             {{- range $file_key, $file_details := .Values.extraFiles }}
-              - mountPath: {{ $file_details.mountPath }}
-                subPath: {{ $file_key | quote }}
-                name: files
+            - mountPath: {{ $file_details.mountPath }}
+              subPath: {{ $file_key | quote }}
+              name: files
             {{- end }}
           {{- end }}
-      {{- with .Values.volumes }}
-      volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -89,9 +88,19 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.extraFiles }}
+      {{- if or .Values.volumes .Values.pvc.create .Values.extraFiles }}
       volumes:
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.pvc.create }}
+        - name: {{ include "generic-webservice.pvcName" $ }}
+          persistentVolumeClaim:
+            claimName: {{ include "generic-webservice.pvcName" $ }}
+        {{- end }}
+        {{- with .Values.extraFiles }}
         - name: files
           configMap:
             name: {{ include "generic-webservice.fullname" $ }}
+        {{- end }}
       {{- end }}

@@ -44,6 +44,8 @@ jobs:
           helm test test
           curl -v http://localhost/srv/file.txt > file.txt
           diff --report-identical-files tests/file.txt file.txt
+          kubectl exec deploy/test-generic-webservice -- mount | grep /data
+          kubectl exec deploy/test-generic-webservice -- df -h /data
 
   publish:
     permissions:

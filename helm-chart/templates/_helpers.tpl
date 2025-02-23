@@ -61,6 +61,17 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+{{/*
+Create the name of the PVC to use if enabled
+*/}}
+{{- define "generic-webservice.pvcName" -}}
+{{- if .Values.pvc.create }}
+{{- default (include "generic-webservice.fullname" .) .Values.pvc.name }}
+{{- else }}
+{{- default "default" .Values.pvc.name }}
+{{- end }}
+{{- end }}
+
 
 {{- /*
   Renders text content that can be mounted into a file in a pod.
