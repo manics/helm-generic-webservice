@@ -80,11 +80,13 @@
           },
           "value": {
             "type": "string"
+          },
+          "valueFrom": {
+            "type": "object"
           }
         },
         "required": [
-          "name",
-          "value"
+          "name"
         ]
       }
     },
