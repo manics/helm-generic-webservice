@@ -16,6 +16,10 @@ args: null
 
 # List of Dicts of key value environment variables
 env: []
+# Dictionary of key:value pairs, use this for simple environment variables
+# so multiple configuration files can be merged (lists are overridden)
+envDict: {}
+# Environment variables taken from a ConfigMap or Secret
 envFrom: []
 
 serviceAccount:

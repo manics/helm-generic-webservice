@@ -4,16 +4,19 @@
   "properties": {
     "replicaCount": {
       "type": "integer",
+      "description": "Number of replicas",
       "minimum": 1
     },
     "image": {
       "type": "object",
       "properties": {
         "repository": {
-          "type": "string"
+          "type": "string",
+          "description": "Image repository"
         },
         "pullPolicy": {
           "type": "string",
+          "description": "K8s image pull policy",
           "enum": [
             "Always",
             "IfNotPresent",
@@ -21,7 +24,8 @@
           ]
         },
         "tag": {
-          "type": "string"
+          "type": "string",
+          "description": "Image tag"
         }
       },
       "required": [
@@ -32,21 +36,25 @@
     },
     "imagePullSecrets": {
       "type": "array",
+      "description": "K8s image pull secrets",
       "items": {
-        "type": "string"
+        "type": "object"
       }
     },
     "nameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override name"
     },
     "fullnameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override fully qualified name"
     },
     "command": {
       "type": [
         "array",
         "null"
       ],
+      "description": "Command (entrypoint)",
       "items": {
         "type": "string"
       }
@@ -56,12 +64,14 @@
         "array",
         "null"
       ],
+      "description": "Arguments",
       "items": {
         "type": "string"
       }
     },
     "env": {
       "type": "array",
+      "description": "K8s environment variables",
       "items": {
         "type": "object",
         "properties": {
@@ -78,8 +88,16 @@
         ]
       }
     },
+    "envDict": {
+      "type": "object",
+      "description": "Dictionary of environment variables",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     "envFrom": {
       "type": "array",
+      "description": "Environment variables taken from a ConfigMap or Secret",
       "items": {
         "type": "object"
       }
@@ -88,41 +106,52 @@
       "type": "object",
       "properties": {
         "create": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Whether to create a service account"
         },
         "automount": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Whether to mount the service account into the pod"
         },
         "annotations": {
-          "type": "object"
+          "type": "object",
+          "description": "K8s annotations"
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Optionally override the service account name"
         }
       }
     },
     "podAnnotations": {
-      "type": "object"
+      "type": "object",
+      "description": "K8s pod annotations"
     },
     "podLabels": {
-      "type": "object"
+      "type": "object",
+      "description": "K8s pod labels"
     },
     "podSecurityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Pod SecurityContext"
     },
     "securityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Container SecurityContext"
     },
     "extraFiles": {
       "type": "object",
+      "description": "Extra files to mount into the pod",
       "additionalProperties": {
         "type": "object",
         "properties": {
           "mountPath": {
-            "type": "string"
+            "type": "string",
+            "description": "Mount the file at this path in the pod"
           },
           "text": {
-            "type": "string"
+            "type": "string",
+            "description": "Text content of the file"
           }
         }
       }
@@ -132,6 +161,7 @@
       "properties": {
         "type": {
           "type": "string",
+          "description": "K8s service type",
           "enum": [
             "ClusterIP",
             "NodePort",
@@ -140,6 +170,7 @@
         },
         "port": {
           "type": "integer",
+          "description": "Service port that it should listen on",
           "minimum": 1,
           "maximum": 65535
         }
@@ -149,13 +180,16 @@
       "type": "object",
       "properties": {
         "enabled": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Whether to create an Ingress"
         },
         "className": {
-          "type": "string"
+          "type": "string",
+          "description": "Ingress class name"
         },
         "annotations": {
-          "type": "object"
+          "type": "object",
+          "description": "K8s annotations"
         },
         "hosts": {
           "type": "array",
@@ -163,7 +197,8 @@
             "type": "object",
             "properties": {
               "host": {
-                "type": "string"
+                "type": "string",
+                "description": "Host name to connect to the ingress"
               },
               "paths": {
                 "type": "array",
@@ -171,10 +206,12 @@
                   "type": "object",
                   "properties": {
                     "path": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Ingress path"
                     },
                     "pathType": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Type of ingress path"
                     }
                   }
                 }
@@ -188,10 +225,12 @@
             "type": "object",
             "properties": {
               "secretName": {
-                "type": "string"
+                "type": "string",
+                "description": "K8s TLS secret"
               },
               "hosts": {
                 "type": "array",
+                "description": "Hostnames",
                 "items": {
                   "type": "string"
                 }
@@ -202,38 +241,46 @@
       }
     },
     "resources": {
-      "type": "object"
+      "type": "object",
+      "description": "K8s resources"
     },
     "livenessProbe": {
-      "type": "object"
+      "type": "object",
+      "description": "Override K8s livenessProbe"
     },
     "readinessProbe": {
-      "type": "object"
+      "type": "object",
+      "description": "Override K8s readinessProbe"
     },
     "pvc": {
       "type": "object",
       "properties": {
         "create": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Whether to create a PVC"
         },
         "storageClassName": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "Storage class name"
         },
         "accessMode": {
-          "type": "string"
+          "type": "string",
+          "description": "Volume access mode"
         },
         "storage": {
           "type": [
             "string"
-          ]
+          ],
+          "description": "Size of the volume"
         },
         "mountPath": {
           "type": [
             "string"
-          ]
+          ],
+          "description": "Mount the storage at the path in the pod"
         }
       }
     },
@@ -241,25 +288,30 @@
       "type": "array",
       "items": {
         "type": "object"
-      }
+      },
+      "description": "Additional K8s volumes"
     },
     "volumeMounts": {
       "type": "array",
       "items": {
         "type": "object"
-      }
+      },
+      "description": "Additional K8s volume mounts"
     },
     "nodeSelector": {
-      "type": "object"
+      "type": "object",
+      "description": "Node selector"
     },
     "tolerations": {
       "type": "array",
+      "description": "Node tolerations",
       "items": {
         "type": "object"
       }
     },
     "affinity": {
-      "type": "object"
+      "type": "object",
+      "description": "Node affinity"
     }
   }
 }

@@ -12,6 +12,9 @@ env:
   - name: HELLO
     value: world
 
+envDict:
+  TEST_CONFIG_ENV_DICT: test-config-env-dict
+
 extraFiles:
   key1:
     mountPath: /srv/file.txt

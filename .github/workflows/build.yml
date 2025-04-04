@@ -46,6 +46,7 @@ jobs:
           diff --report-identical-files tests/file.txt file.txt
           kubectl exec deploy/test-generic-webservice -- mount | grep /data
           kubectl exec deploy/test-generic-webservice -- df -h /data
+          kubectl exec deploy/test-generic-webservice -- env | grep TEST_CONFIG_ENV_DICT=test-config-env-dict
 
   publish:
     permissions:

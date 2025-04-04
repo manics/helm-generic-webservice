@@ -43,9 +43,15 @@ spec:
           args:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.env }}
+          {{- if or .Values.env .Values.envDict }}
           env:
+          {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- range $key, $value := .Values.envDict }}
+            - name: {{ $key }}
+              value: {{ $value }}
+          {{- end }}
           {{- end }}
           {{- with .Values.envFrom }}
           envFrom:
